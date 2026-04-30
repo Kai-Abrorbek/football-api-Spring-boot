@@ -6,6 +6,8 @@ import com.kai.football_api.following.repository.FollowingRepository;
 import com.kai.football_api.user.entity.User;
 import com.kai.football_api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class FollowingService {
         return userRepository.findByEmail(email);
     }
 
+    @CacheEvict(value = "following", key = "'all'")
     @Transactional
     public void follow(Long targetId) {
         User currentUser = getCurrentUser();
@@ -46,6 +49,7 @@ public class FollowingService {
         followingRepository.save(following);
     }
 
+    @CacheEvict(value = "following", key = "'all'")
     @Transactional
     public void unfollow(Long targetId) {
         User currentUser = getCurrentUser();
@@ -58,6 +62,7 @@ public class FollowingService {
         followingRepository.delete(following);
     }
 
+    @Cacheable(value = "following", key = "'all'")
     @Transactional(readOnly = true)
     public List<FollowingResponse> getFollowings() {
         return followingRepository.findByFollower(getCurrentUser())
@@ -66,6 +71,7 @@ public class FollowingService {
                 .toList();
     }
 
+    @Cacheable(value = "follower", key = "'all'")
     @Transactional(readOnly = true)
     public List<FollowingResponse> getFollowers() {
         return followingRepository.findByFollowing(getCurrentUser())
