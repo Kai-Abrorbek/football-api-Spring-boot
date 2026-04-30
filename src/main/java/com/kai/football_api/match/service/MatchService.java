@@ -40,4 +40,8 @@ public class MatchService {
     match.setAwayScore(awayScore);
     return matchRepository.save(match);
   }
+
+  public List<Match>searchMatches(String teamName, MatchStatus status){
+    return  matchRepository.searchMatches(teamName, status);
+  }
 }

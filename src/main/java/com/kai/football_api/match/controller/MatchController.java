@@ -39,4 +39,11 @@ public class MatchController {
       @RequestParam int awayScore) {
     return ResponseEntity.ok(matchService.updateScore(id, homeScore, awayScore));
   }
+
+  @GetMapping("/search")
+  public ResponseEntity<List<Match>> searchMatches(
+          @RequestParam(required = false) String teamName,
+          @RequestParam(required = false) MatchStatus status){
+    return ResponseEntity.ok(matchService.searchMatches(teamName, status));
+  }
 }
