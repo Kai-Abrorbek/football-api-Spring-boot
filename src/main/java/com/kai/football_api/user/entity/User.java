@@ -5,7 +5,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_users_name_createdAt", columnList = "name, createdAt")
+})
 @Getter
 @Setter
 @NoArgsConstructor
