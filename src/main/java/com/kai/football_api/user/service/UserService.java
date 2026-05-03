@@ -1,5 +1,6 @@
 package com.kai.football_api.user.service;
 
+import com.kai.football_api.common.PreventDuplicate;
 import com.kai.football_api.jwt.JwtUtil;
 import com.kai.football_api.user.dto.LoginRequest;
 import com.kai.football_api.user.dto.RegisterRequest;
@@ -18,6 +19,7 @@ public class UserService {
   private final BCryptPasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
 
+  @PreventDuplicate
   @Transactional
   public void register(RegisterRequest request) {
     if (userRepository.existsByEmail(request.getEmail())) {
@@ -33,6 +35,7 @@ public class UserService {
     userRepository.save(user);
   }
 
+  @PreventDuplicate
   @Transactional
   public String login(LoginRequest request) {
     User user = userRepository.findByEmail(request.getEmail());
