@@ -1,5 +1,7 @@
 package com.kai.football_api.following.service;
 
+import com.kai.football_api.common.AdminOnly;
+import com.kai.football_api.common.PreventDuplicate;
 import com.kai.football_api.following.dto.FollowingResponse;
 import com.kai.football_api.following.entity.Following;
 import com.kai.football_api.following.repository.FollowingRepository;
@@ -8,6 +10,7 @@ import com.kai.football_api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,7 @@ public class FollowingService {
     }
 
     @CacheEvict(value = "following", key = "'all'")
+    @AdminOnly
     @Transactional
     public void follow(Long targetId) {
         User currentUser = getCurrentUser();
@@ -78,5 +82,12 @@ public class FollowingService {
                 .stream()
                 .map(FollowingResponse::new)
                 .toList();
+    }
+
+    public void triggerNPlusOne() {
+        List<Following> followings = followingRepository.findAll();
+        followings.forEach(f -> {
+            System.out.println(f.getFollower().getName());
+        });
     }
 }

@@ -37,4 +37,10 @@ public class FollowingController {
     public ResponseEntity<List<FollowingResponse>> getFollowers() {
         return ResponseEntity.ok(followingService.getFollowers());
     }
+
+    @GetMapping("/nplusone")
+    public ResponseEntity<String> triggerNPlusOne() {
+        followingService.triggerNPlusOne();
+        return ResponseEntity.ok("콘솔 확인해봐");
+    }
 }
